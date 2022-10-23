@@ -1,6 +1,7 @@
 //This program is to display Welcome to Address Book System in main class.
-//Use Case 1 is to create one contact in Address Book System.
+//Use Case 1 is to Create one contact in Address Book System.
 //Use Case 2 is to Add another contact in Address Book System.
+//Use Case 3 is to Edit existing contact in Address Book System.
 
 package com.address.book;
 
@@ -8,9 +9,6 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class AddressBookSystemMain {
-
-    //Creating an arraylist.
-    private static ArrayList<String> contactDetails = new ArrayList<>();
 
     //Default Constructor
     public AddressBookSystemMain()
@@ -23,38 +21,51 @@ public class AddressBookSystemMain {
         //Initialize Object
         AddressBookSystemMain obj = new AddressBookSystemMain();
 
-        //Calling Encapsulated Class object
-        ContactPerson a = new ContactPerson("Soumya","Singh","Jobra","Cuttack",
-                "Odisha","753007","8908641811","soumyars675@gmail.com");
-
-        //Adding another contact
-        System.out.println();
+        //Doing the operations in address book.
         Scanner scan = new Scanner(System.in);
-        System.out.println("Enter the contact details.............");
-        System.out.println("Enter the first name:");
-        String firstName = scan.nextLine();
-        System.out.println("Enter the last name:");
-        String lastName = scan.nextLine();
-        System.out.println("Enter the address:");
-        String address = scan.nextLine();
-        System.out.println("Enter the city:");
-        String city = scan.nextLine();
-        System.out.println("Enter the state:");
-        String state = scan.nextLine();
-        System.out.println("Enter the zip code:");
-        String zip = scan.nextLine();
-        System.out.println("Enter the phone no:");
-        String phoneNumber = scan.nextLine();
-        System.out.println("Enter the email:");
-        String email = scan.nextLine();
+        ContactOperations addressBook = new ContactOperations();
+
+        boolean flag = true;
+
+        while(flag) {
+
+            System.out.println("1.Add Contact");
+            System.out.println("2.Edit Contact");
+            System.out.println("3.Exit");
+            System.out.println("Enter Choice: ");
+
+            int option = scan.nextInt();
+
+            switch (option) {
+                case 1:
+                    addressBook.addContact();
+                    addressBook.printContact();
+                    break;
+
+                case 2:
+                    if (addressBook.checkList() == true) {
+                        System.out.println("Enter the Person First name to edit details: ");
+                        String person_name = scan.next();
+                        boolean b = addressBook.editContact(person_name);
+                        if (b == true)
+                        {
+                            System.out.println("Details Updated");
+                        }
+                        else
+                        {
+                            System.out.println("Contact Not Found");
+                        }
+                    }
+                    else
+                        System.out.println("Nothing in the contact list.\nPlease create one");
+                    break;
+
+                    case 3:
+                        addressBook.printContact();
+                        flag = false;
+                        break;
+            }
+        }
         scan.close();
-        ContactPerson b = new ContactPerson(firstName, lastName, address, city, state,zip,phoneNumber,email);
-
-        //Parsing the object to create a list
-        contactDetails.add(a.toString());
-        contactDetails.add(b.toString());
-
-        //Printing contact details
-        a.printContact(contactDetails);
     }
 }
