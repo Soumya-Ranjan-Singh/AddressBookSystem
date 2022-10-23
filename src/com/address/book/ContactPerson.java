@@ -45,5 +45,17 @@ public class ContactPerson {
                 '}';
     }
 
+    //Printing contactDetails
+    public void printContact(List<String> list) {
+        System.out.println("Contact details are below.....\n");
+        if(!list.isEmpty())
+        {
+            Iterator it = list.iterator();
+            while (it.hasNext())
+            {
+                System.out.println(it.next());
+            }
+        }
+    }
 }
 
