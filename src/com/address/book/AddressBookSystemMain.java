@@ -2,6 +2,7 @@
 //Use Case 1 is to Create one contact in Address Book System.
 //Use Case 2 is to Add another contact in Address Book System.
 //Use Case 3 is to Edit existing contact in Address Book System.
+//Use Case 4 is to Delete a contact in Address Book System.
 
 package com.address.book;
 
@@ -31,7 +32,8 @@ public class AddressBookSystemMain {
 
             System.out.println("1.Add Contact");
             System.out.println("2.Edit Contact");
-            System.out.println("3.Exit");
+            System.out.println("3.Delete Contact");
+            System.out.println("4.Exit");
             System.out.println("Enter Choice: ");
 
             int option = scan.nextInt();
@@ -61,7 +63,25 @@ public class AddressBookSystemMain {
                     break;
 
                     case 3:
-                        addressBook.printContact();
+                        if (addressBook.checkList() == true) {
+                            System.out.println("Enter the Contact to be deleted:");
+                            String firstName = scan.next();
+                            boolean listDeleted = addressBook.deleteContact(firstName);
+                            if (listDeleted)
+                            {
+                                System.out.println("Details Deleted");
+                            }
+                            else
+                            {
+                                System.out.println("Cannot be Deleted");
+                            }
+                        }
+                        else
+                            System.out.println("Nothing in the contact list.\nPlease create one");
+                        break;
+
+                case 4:
+                    addressBook.printContact();
                         flag = false;
                         break;
             }
