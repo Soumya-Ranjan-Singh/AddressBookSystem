@@ -17,10 +17,6 @@ public class ContactPerson {
     private String phoneNumber;
     private String email;
 
-    //Creating one default constructor
-    public ContactPerson() {
-    }
-
     //Creating one parameterized constructor
     public ContactPerson(String firstName, String lastName, String address, String city, String state, String zip, String phoneNumber, String email) {
         setFirstName(firstName);
@@ -86,19 +82,5 @@ public class ContactPerson {
                 '}';
     }
 
-    //Printing contactDetails
-    public void printContact(List<ContactPerson> list) {
-        if(!list.isEmpty())
-        {
-            System.out.println("Contact details are below.....\n");
-            Iterator it = list.iterator();
-            while (it.hasNext())
-            {
-                System.out.println(it.next());
-            }
-        }
-        else
-            System.out.println("Contact list is empty.");
-    }
 }
 
