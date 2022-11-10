@@ -2,13 +2,18 @@
 
 package com.address.book;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.Scanner;
+import java.util.*;
 
 public class ContactOperations {
     static Scanner scan = new Scanner(System.in);
-    private static ArrayList<ContactPerson> contactDetails = new ArrayList<>();
+
+    //Creating an array list that contains all the contact persons
+    private ArrayList<ContactPerson> contactDetails;
+
+    //Constructor
+    public ContactOperations() {
+        this.contactDetails = new ArrayList<>();
+    }
 
     //For adding contact
     public void addContact()
@@ -170,5 +175,13 @@ public class ContactOperations {
         }
         else
             System.out.println("Contact list is empty.");
+    }
+
+    //Creating a To string method
+    @Override
+    public String toString() {
+        return "ContactOperations{" +
+                "contactDetails=" + contactDetails +
+                '}';
     }
 }

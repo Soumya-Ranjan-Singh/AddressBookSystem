@@ -2,9 +2,6 @@
 
 package com.address.book;
 
-import java.util.Iterator;
-import java.util.List;
-
 public class ContactPerson {
 
     //Declaring variables for Address Book System

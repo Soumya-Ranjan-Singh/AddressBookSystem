@@ -4,12 +4,19 @@
 //Use Case 3 is to Edit existing contact in Address Book System.
 //Use Case 4 is to Delete a contact in Address Book System.
 //Use Case 5 is to Add multiple persons at a time in Address Book System.
+//Use Case 6 is to Add multiple Address Book to the System but condition is that each Address Book has a unique name.
 
 package com.address.book;
 
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 import java.util.Scanner;
 
 public class AddressBookSystemMain {
+
+    //Declaring one hashmap containing all the address book
+    Map<String, ContactOperations> addressBookDictionary = new HashMap<>();
 
     //Default Constructor
     public AddressBookSystemMain()
@@ -17,18 +24,84 @@ public class AddressBookSystemMain {
         System.out.println("Welcome to Address Book Program !!!");
     }
 
+    Scanner scan = new Scanner(System.in);
+    ContactOperations addressBook;
+
+    //Method to save the address book
+    public void saveAddressBook(String a) {
+        addressBook = new ContactOperations();
+        addressBookOperation();
+        System.out.println("Do you want to save this address book?");
+        String choice = scan.next();
+        if (choice.equalsIgnoreCase("y"))
+        {
+            addressBookDictionary.put(a, addressBook);
+        }
+        else
+        {
+            System.out.println("Address book is not saved");
+        }
+    }
+
+    //Method to print all the address book
+    public void printAddressBooks()
+    {
+        Iterator<Map.Entry<String, ContactOperations>> itr = addressBookDictionary.entrySet().iterator();
+        while (itr.hasNext())
+        {
+            Map.Entry<String, ContactOperations> entry = itr.next();
+            System.out.println(entry.getKey());
+            System.out.println(entry.getValue());
+        }
+    }
+
+    //Method to check if that given address book name is present or in the address book dictionary
+    public boolean checkBookName(String a)
+    {
+        boolean flag = true;
+        Iterator<Map.Entry<String, ContactOperations>> itr = addressBookDictionary.entrySet().iterator();
+        while (itr.hasNext())
+        {
+            Map.Entry<String, ContactOperations> entry = itr.next();
+            String s = entry.getKey();
+            if (s.equalsIgnoreCase(a))
+            {
+                System.out.println("This name : "+a+" is already present in Address Book Dictionary\nGive a new name");
+                flag = false;
+                break;
+            }
+        }
+        return flag;
+    }
+
     public static void main(String[] args) {
 
         //Initialize Object
         AddressBookSystemMain obj = new AddressBookSystemMain();
 
-        //Doing the operations in address book.
-        addressBookOperation();
+        //Now saving the address book
+        System.out.println("How many address book you want to save?");
+        int books = obj.scan.nextInt();
+        for (int i = 1; i <= books; i++)
+        {
+            System.out.println("Give one address book name");
+            String a = obj.scan.next();
+            if (obj.checkBookName(a))
+            {
+                System.out.println("For " + a);
+                obj.saveAddressBook(a);
+            }
+            else
+                i--;
+        }
+        obj.scan.close();
+
+        //print all address book
+        obj.printAddressBooks();
     }
 
-    public static void addressBookOperation() {
-        Scanner scan = new Scanner(System.in);
-        ContactOperations addressBook = new ContactOperations();
+    //Performing some contact operation
+    public void addressBookOperation() {
 
         boolean flag = true;
 
@@ -52,7 +125,7 @@ public class AddressBookSystemMain {
 
                 case "2":
                     System.out.println("1.You want to add multiple contacts from console");
-                    System.out.println("You want to add multiple contacts from the contact cards");
+                    System.out.println("2.You want to add multiple contacts from the contact cards");
                     System.out.println("What you want?");
                     System.out.println("Enter your choice.");
                     int choice = scan.nextInt();
@@ -114,6 +187,5 @@ public class AddressBookSystemMain {
                     break;
             }
         }
-        scan.close();
     }
 }
