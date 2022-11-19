@@ -5,6 +5,7 @@
 //Use Case 4 is to Delete a contact in Address Book System.
 //Use Case 5 is to Add multiple persons at a time in Address Book System.
 //Use Case 6 is to Add multiple Address Book to the System but condition is that each Address Book has a unique name.
+//Use Case 7 is to Ensure that no duplicate entry of the same person in a particular address book.
 
 package com.address.book;
 
@@ -121,6 +122,14 @@ public class AddressBookSystemMain {
             switch (option) {
                 case "1":
                     addressBook.addContact();
+                    if (addressBook.check == true)
+                    {
+                        System.out.println(" Contact added successfully");
+                    }
+                    else
+                    {
+                        System.out.println("Sorry!!! Contact can't be added");
+                    }
                     break;
 
                 case "2":
@@ -136,7 +145,16 @@ public class AddressBookSystemMain {
                         for (int i = 1; i <= numOfContacts; i++)
                         {
                             addressBook.addContact();
-                            System.out.println(i+" Contact added successfully");
+                            if (addressBook.check == true)
+                            {
+                                System.out.println(i + " Contact added successfully");
+                            }
+                            else
+                            {
+                                System.out.println("Sorry!!! Contact can't be added");
+                                System.out.println("Please input another one");
+                                i--;
+                            }
                         }
                     }
                     else if (choice == 2)

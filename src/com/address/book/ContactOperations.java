@@ -9,10 +9,42 @@ public class ContactOperations {
 
     //Creating an array list that contains all the contact persons
     private ArrayList<ContactPerson> contactDetails;
+    public boolean check;
 
     //Constructor
     public ContactOperations() {
         this.contactDetails = new ArrayList<>();
+    }
+
+    //Adding to list (Considering no duplicate occurs in the list)
+    public void addToList(ContactPerson obj) {
+        if (checkList() == false)
+        {
+            //contactDetails.add(obj);
+            check = true;
+        }
+        else
+        {
+            boolean flag = false;
+            for (int i = 0; i < contactDetails.size(); i++)
+            {
+                if (contactDetails.get(i).getFirstName().equalsIgnoreCase(obj.getFirstName()))
+                {
+                    flag = true;
+                    break;
+                }
+            }
+            if (flag == true)
+            {
+                System.out.println("Already this contact details : "+obj.getFirstName()+" is present in the list");
+                check = false;
+            }
+            else
+            {
+                contactDetails.add(obj);
+                check = true;
+            }
+        }
     }
 
     //For adding contact
@@ -38,7 +70,7 @@ public class ContactOperations {
 
         //Calling Contact person class
         ContactPerson details = new ContactPerson(firstName, lastName, address, city, state,zip,phoneNumber,email);
-        contactDetails.add(details);
+        addToList(details);
     }
 
     //Adding some contact cards
@@ -50,9 +82,9 @@ public class ContactOperations {
                 "Odisha", "754021", "7008565646", "sbehera@gmail.com");
         ContactPerson c = new ContactPerson("Nigam", "Jena", "Nakhara", "Bbsr",
                 "Odisha", "724001", "9937585846", "njena50@gmail.com");
-        contactDetails.add(a);
-        contactDetails.add(b);
-        contactDetails.add(c);
+        addToList(a);
+        addToList(b);
+        addToList(c);
     }
 
     //For editing contact
