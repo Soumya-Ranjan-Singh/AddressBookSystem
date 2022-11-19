@@ -20,7 +20,7 @@ public class ContactOperations {
     public void addToList(ContactPerson obj) {
         if (checkList() == false)
         {
-            //contactDetails.add(obj);
+            contactDetails.add(obj);
             check = true;
         }
         else
