@@ -6,6 +6,8 @@
 //Use Case 5 is to Add multiple persons at a time in Address Book System.
 //Use Case 6 is to Add multiple Address Book to the System but condition is that each Address Book has a unique name.
 //Use Case 7 is to Ensure that no duplicate entry of the same person in a particular address book.
+//Use Case 8 is to Search person in a city or state across the multiple address book.
+//Use Case 9 is to View persons by city or state.
 
 package com.address.book;
 
@@ -177,8 +179,61 @@ public class AddressBookSystemMain {
         //print all address book
         obj.printAddressBooks();
 
-
+        //search persons by means of city or state in whole address books
+        obj.searchPersons();
     }
 
+    //Method to search and print persons by means of city and state
+    public void searchPersons() {
+        System.out.println("1. Search by city name");
+        System.out.println("2. Search by state name");
+        System.out.println("Enter your choice by means of that you want to search");
+        int choice = scan.nextInt();
+        switch (choice)
+        {
+            case 1:
+                System.out.println("Enter city name by means of which you want to search");
+                String searchCity = scan.next();
+                Iterator<Map.Entry<String, ContactOperations>> itr = addressBookDictionary.entrySet().iterator();
+                while (itr.hasNext()) {
+                    Map.Entry<String, ContactOperations> entry = itr.next();
+                    System.out.println(entry.getKey());
+                    List<ContactPerson> list = entry.getValue().getContact().stream().filter(ContactPerson ->
+                            ContactPerson.getCity().equalsIgnoreCase(searchCity)).collect(Collectors.toList());
+                    System.out.println(list);
+
+                }
+//                Iterator<Map.Entry<String , ContactOperations>> itr = addressBookDictionary.entrySet().iterator();
+//                while (itr.hasNext())
+//                {
+//                    Map.Entry<String, ContactOperations> entry = itr.next();
+//                    System.out.println(entry.getKey());
+//                    for (int i = 0; i < entry.getValue().getContact().size(); i++)
+//                    {
+//                        if (entry.getValue().getContact().get(i).getCity().equalsIgnoreCase(searchCity))
+//                        {
+//                            System.out.println(entry.getValue().getContact().get(i));
+//                        }
+//                    }
+//                }
+                break;
+            case 2 :
+                System.out.println("Enter State name by means of which you want to search");
+                String searchState = scan.next();
+                Iterator<Map.Entry<String, ContactOperations>> it = addressBookDictionary.entrySet().iterator();
+                while (it.hasNext()) {
+                    Map.Entry<String, ContactOperations> entry = it.next();
+                    System.out.println(entry.getKey());
+                    List<ContactPerson> list = entry.getValue().getContact().stream().filter(ContactPerson ->
+                            ContactPerson.getState().equalsIgnoreCase(searchState)).collect(Collectors.toList());
+                    System.out.println(list);
+
+                }
+                break;
+            default :
+                System.out.println("Wrong entry. Please try again\n");
+                searchPersons();
+        }
+    }
 }
 
