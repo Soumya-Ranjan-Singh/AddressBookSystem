@@ -25,15 +25,18 @@ public class ContactOperations {
         }
         else
         {
-            boolean flag = false;
-            for (int i = 0; i < contactDetails.size(); i++)
-            {
-                if (contactDetails.get(i).getFirstName().equalsIgnoreCase(obj.getFirstName()))
-                {
-                    flag = true;
-                    break;
-                }
-            }
+            boolean flag = contactDetails.stream().anyMatch((ContactPerson)
+                    -> ContactPerson.getFirstName().equalsIgnoreCase(obj.getFirstName()));
+
+//            boolean flag = false;
+//            for (int i = 0; i < contactDetails.size(); i++)
+//            {
+//                if (contactDetails.get(i).getFirstName().equalsIgnoreCase(obj.getFirstName()))
+//                {
+//                    flag = true;
+//                    break;
+//                }
+//            }
             if (flag == true)
             {
                 System.out.println("Already this contact details : "+obj.getFirstName()+" is present in the list");
@@ -207,6 +210,15 @@ public class ContactOperations {
         }
         else
             System.out.println("Contact list is empty.");
+    }
+
+    //Method to get objects of list
+    public ArrayList<ContactPerson> getContact() {
+        if(checkList())
+        {
+            return contactDetails;
+        }
+        return null;
     }
 
     //Creating a To string method
