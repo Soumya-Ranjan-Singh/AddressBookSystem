@@ -10,6 +10,7 @@
 //Use Case 9 is to Search persons by city or state.
 //Use Case 10 is to View persons by city or state.
 //Use Case 11 is to Sort the entries in the address book alphabetically by Person's name.
+//Use Case 12 is to Sort the entries in the address book by city, state or zip.
 
 package com.address.book;
 
@@ -155,9 +156,7 @@ public class AddressBookSystemMain {
         while (itr.hasNext()) {
             Map.Entry<String, ContactOperations> entry = itr.next();
             System.out.println(entry.getKey());
-            List list = entry.getValue().getContact().stream().
-                    sorted(Comparator.comparing(ContactPerson::getFirstName)).collect(Collectors.toList());
-            System.out.println(list);
+            System.out.println(entry.getValue());
         }
     }
 
@@ -224,6 +223,93 @@ public class AddressBookSystemMain {
         }
     }
 
+    //Method to print all the address book sorting by names
+    public void printBySortingNames() {
+        Iterator<Map.Entry<String, ContactOperations>> itr = addressBookDictionary.entrySet().iterator();
+        while (itr.hasNext()) {
+            Map.Entry<String, ContactOperations> entry = itr.next();
+            System.out.println(entry.getKey());
+            List list = entry.getValue().getContact().stream().
+                    sorted(Comparator.comparing(ContactPerson::getFirstName)).collect(Collectors.toList());
+            System.out.println(list);
+        }
+    }
+
+    //Method to print all the address book sorting by city
+    public void printBySortingCity() {
+        Iterator<Map.Entry<String, ContactOperations>> itr = addressBookDictionary.entrySet().iterator();
+        while (itr.hasNext()) {
+            Map.Entry<String, ContactOperations> entry = itr.next();
+            System.out.println(entry.getKey());
+            List list = entry.getValue().getContact().stream().
+                    sorted(Comparator.comparing(ContactPerson::getCity)).collect(Collectors.toList());
+            System.out.println(list);
+        }
+    }
+
+    //Method to print all the address book sorting by state
+    public void printBySortingState() {
+        Iterator<Map.Entry<String, ContactOperations>> itr = addressBookDictionary.entrySet().iterator();
+        while (itr.hasNext()) {
+            Map.Entry<String, ContactOperations> entry = itr.next();
+            System.out.println(entry.getKey());
+            List list = entry.getValue().getContact().stream().
+                    sorted(Comparator.comparing(ContactPerson::getState)).collect(Collectors.toList());
+            System.out.println(list);
+        }
+    }
+
+    //Method to print all the address book sorting by zip code
+    public void printBySortingZipCodes() {
+        Iterator<Map.Entry<String, ContactOperations>> itr = addressBookDictionary.entrySet().iterator();
+        while (itr.hasNext()) {
+            Map.Entry<String, ContactOperations> entry = itr.next();
+            System.out.println(entry.getKey());
+            List list = entry.getValue().getContact().stream().
+                    sorted(Comparator.comparing(ContactPerson::getZip)).collect(Collectors.toList());
+            System.out.println(list);
+        }
+    }
+
+    //Method to get Print as per user wish
+    public void printMap() {
+        System.out.println("Enter your choice like how do you want to see your Address Books");
+        System.out.println("1. Print by means of sorting names");
+        System.out.println("2. Print by means of sorting city");
+        System.out.println("3. Print by means of sorting state");
+        System.out.println("4. Print by means of sorting zip codes");
+        int choice = scan.nextInt();
+        switch (choice)
+        {
+            case 1 :
+                System.out.println("Before sorting");
+                printAddressBooks();
+                System.out.println("\n"+"After sorting");
+                printBySortingNames();
+                break;
+            case 2 :
+                System.out.println("Before sorting");
+                printAddressBooks();
+                System.out.println("\n"+"After sorting");
+                printBySortingCity();
+                break;
+            case 3 :
+                System.out.println("Before sorting");
+                printAddressBooks();
+                System.out.println("\n"+"After sorting");
+                printBySortingState();
+                break;
+            case 4 :
+                System.out.println("Before sorting");
+                printAddressBooks();
+                System.out.println("\n"+"After sorting");
+                printBySortingZipCodes();
+                break;
+            default :
+                System.out.println("Wrong choice. Please try again");
+        }
+    }
+
     public static void main(String[] args) {
 
         //Initialize Object
@@ -243,7 +329,7 @@ public class AddressBookSystemMain {
         }
 
         //print all address book
-        obj.printAddressBooks();
+        obj.printMap();
 
         //search persons by means of city or state in whole address books
         obj.searchPersons();
