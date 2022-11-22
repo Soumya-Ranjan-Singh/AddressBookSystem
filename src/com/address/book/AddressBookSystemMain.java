@@ -194,15 +194,20 @@ public class AddressBookSystemMain {
             case 1:
                 System.out.println("Enter city name by means of which you want to search");
                 String searchCity = scan.next();
+                long count = 0;
                 Iterator<Map.Entry<String, ContactOperations>> itr = addressBookDictionary.entrySet().iterator();
                 while (itr.hasNext()) {
                     Map.Entry<String, ContactOperations> entry = itr.next();
                     System.out.println(entry.getKey());
                     List<ContactPerson> list = entry.getValue().getContact().stream().filter(ContactPerson ->
                             ContactPerson.getCity().equalsIgnoreCase(searchCity)).collect(Collectors.toList());
+                    long cnt = entry.getValue().getContact().stream().filter(ContactPerson ->
+                            ContactPerson.getCity().equalsIgnoreCase(searchCity)).count();
                     System.out.println(list);
-
+                    count = count + cnt;
                 }
+                System.out.println(count);
+
 //                Iterator<Map.Entry<String , ContactOperations>> itr = addressBookDictionary.entrySet().iterator();
 //                while (itr.hasNext())
 //                {
@@ -220,16 +225,21 @@ public class AddressBookSystemMain {
             case 2 :
                 System.out.println("Enter State name by means of which you want to search");
                 String searchState = scan.next();
+                long count1 = 0;
                 Iterator<Map.Entry<String, ContactOperations>> it = addressBookDictionary.entrySet().iterator();
                 while (it.hasNext()) {
                     Map.Entry<String, ContactOperations> entry = it.next();
                     System.out.println(entry.getKey());
-                    List<ContactPerson> list = entry.getValue().getContact().stream().filter(ContactPerson ->
+                    List<ContactPerson> list1 = entry.getValue().getContact().stream().filter(ContactPerson ->
                             ContactPerson.getState().equalsIgnoreCase(searchState)).collect(Collectors.toList());
-                    System.out.println(list);
-
+                    System.out.println(list1);
+                    long cnt1 = entry.getValue().getContact().stream().filter(ContactPerson ->
+                            ContactPerson.getCity().equalsIgnoreCase(searchState)).count();
+                    count1 = count1 + cnt1;
                 }
+                System.out.println(count1);
                 break;
+
             default :
                 System.out.println("Wrong entry. Please try again\n");
                 searchPersons();
