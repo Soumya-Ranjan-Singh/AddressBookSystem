@@ -2,7 +2,9 @@
 
 package com.address.book;
 
-public class ContactPerson {
+import java.io.Serializable;
+
+public class ContactPerson implements Serializable {
 
     //Declaring variables for Address Book System
     private String firstName;
@@ -64,14 +66,6 @@ public class ContactPerson {
         return firstName;
     }
 
-    public String getLastName() {
-        return lastName;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
     public String getCity() {
         return city;
     }
@@ -82,6 +76,14 @@ public class ContactPerson {
 
     public String getZip() {
         return zip;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public String getAddress() {
+        return address;
     }
 
     public String getPhoneNumber() {

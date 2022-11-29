@@ -2,13 +2,21 @@
 
 package com.address.book;
 
+import com.google.gson.Gson;
+import com.opencsv.bean.ColumnPositionMappingStrategy;
+import com.opencsv.bean.CsvToBean;
+import com.opencsv.bean.CsvToBeanBuilder;
+
+import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.*;
 
-public class ContactOperations {
+public class ContactOperations implements Serializable {
     static Scanner scan = new Scanner(System.in);
 
     //Creating an array list that contains all the contact persons
-    private ArrayList<ContactPerson> contactDetails;
+    private final ArrayList<ContactPerson> contactDetails;
     public boolean check;
 
     //Constructor
@@ -18,7 +26,7 @@ public class ContactOperations {
 
     //Adding to list (Considering no duplicate occurs in the list)
     public void addToList(ContactPerson obj) {
-        if (checkList() == false)
+        if (!checkList())
         {
             contactDetails.add(obj);
             check = true;
@@ -37,7 +45,7 @@ public class ContactOperations {
 //                    break;
 //                }
 //            }
-            if (flag == true)
+            if (flag)
             {
                 System.out.println("Already this contact details : "+obj.getFirstName()+" is present in the list");
                 check = false;
@@ -90,6 +98,74 @@ public class ContactOperations {
         addToList(c);
     }
 
+    public void readContactData (AddressBookSystemMain.IOService ioService) {
+        if (ioService.equals(AddressBookSystemMain.IOService.FILE_IO)) {
+            System.out.println("1.Want to read contact list by means of Buffer writer?");
+            System.out.println("2.Want to read contact list by means of Object output stream?");
+            int wrtChoice = scan.nextInt();
+            if (wrtChoice == 2) {
+                try {
+                    String name = "PhoneBookObject.txt";
+                    FileInputStream fis = new FileInputStream(name);
+                    ObjectInputStream ois = new ObjectInputStream(fis);
+                    Object obj = ois.readObject();
+                    contactDetails.add((ContactPerson) obj);
+                } catch (IOException | ClassNotFoundException e) {
+                    throw new RuntimeException(e);
+                }
+            } else if (wrtChoice == 1) {
+                try {
+                    Files.readAllLines(new File("PhoneBook.txt").toPath()).stream().map(String::trim)
+                            .forEach(line -> {
+                                String[] ch = line.split("=");
+                                String firstName = ch[1].split("'")[1].trim();
+                                String lastName = ch[2].split("'")[1].trim();
+                                String address = ch[3].split("'")[1].trim();
+                                String city = ch[4].split("'")[1].trim();
+                                String state = ch[5].split("'")[1].trim();
+                                String zip = ch[6].split("'")[1].trim();
+                                String phoneNo = ch[7].split("'")[1].trim();
+                                String email = ch[8].split("'")[1].trim();
+                                contactDetails.add(new ContactPerson(firstName, lastName, address, city, state, zip, phoneNo, email));
+                            });
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        } else if (ioService.equals(AddressBookSystemMain.IOService.CSV_IO)) {
+            try (
+                    Reader reader = Files.newBufferedReader(Paths.get("PhoneBook.csv"))
+            ) {
+                ColumnPositionMappingStrategy<ContactPerson> strategy = new ColumnPositionMappingStrategy<>();
+                strategy.setType(ContactPerson.class);
+                String[] memberFieldsToBindTo = {"firstName", "lastName", "address", "city", "state", "zip", "phoneNumber", "email"};
+                strategy.setColumnMapping(memberFieldsToBindTo);
+                @SuppressWarnings({"unchecked", "rawtypes"}) CsvToBean<ContactPerson> csvToBean = new CsvToBeanBuilder(reader)
+                        .withMappingStrategy(strategy)
+                        .withSkipLines(1)
+                        .withIgnoreLeadingWhiteSpace(true)
+                        .build();
+                for (ContactPerson obj : csvToBean) {
+                    contactDetails.add(obj);
+                }
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        } else if (ioService.equals(AddressBookSystemMain.IOService.JSON_IO)) {
+            try {
+                Gson gson = new Gson();
+                //Read the Contact.json file
+                BufferedReader br = new BufferedReader(
+                        new FileReader("PhoneBook.json"));
+                //convert the json to  Java object (ContactPerson)
+                ContactOperations contactPerson = gson.fromJson(br, ContactOperations.class);
+                contactDetails.addAll(contactPerson.contactDetails);
+            } catch (FileNotFoundException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
     //For editing contact
     public boolean editContact()
     {
@@ -112,54 +188,46 @@ public class ContactOperations {
 
                     int choice = scan.nextInt();
                     switch (choice) {
-                        case 1:
+                        case 1 -> {
                             System.out.println("Enter First Name: ");
                             String firstName = scan.next();
                             contact.setFirstName(firstName);
-                            break;
-
-                        case 2:
+                        }
+                        case 2 -> {
                             System.out.println("Enter Last name: ");
                             String lastName = scan.next();
                             contact.setLastName(lastName);
-                            break;
-
-                        case 3:
+                        }
+                        case 3 -> {
                             System.out.println("Enter Address: ");
                             String address = scan.next();
                             contact.setAddress(address);
-                            break;
-
-                        case 4:
+                        }
+                        case 4 -> {
                             System.out.println("Enter City: ");
                             String city = scan.next();
                             contact.setCity(city);
-                            break;
-
-                        case 5:
+                        }
+                        case 5 -> {
                             System.out.println("Enter State: ");
                             String state = scan.next();
                             contact.setState(state);
-                            break;
-
-                        case 6:
+                        }
+                        case 6 -> {
                             System.out.println("Enter Zip Code: ");
                             String zip = scan.next();
                             contact.setZip(zip);
-                            break;
-
-                        case 7:
+                        }
+                        case 7 -> {
                             System.out.println("Enter Phone Number:");
                             String phoneNumber = scan.next();
                             contact.setPhoneNumber(phoneNumber);
-                            break;
-
-                        case 8:
+                        }
+                        case 8 -> {
                             System.out.println("Enter Email: ");
                             String email = scan.next();
                             contact.setEmail(email);
-                            break;
-
+                        }
                     }
 
                     flag = 1;
@@ -191,10 +259,7 @@ public class ContactOperations {
     //Check if array list is empty
     public boolean checkList()
     {
-        if (!contactDetails.isEmpty())
-            return true;
-        else
-            return false;
+        return !contactDetails.isEmpty();
     }
 
     //Printing contactDetails
@@ -202,10 +267,8 @@ public class ContactOperations {
         if(checkList())
         {
             System.out.println("Contact details are below.....\n");
-            Iterator it = contactDetails.iterator();
-            while (it.hasNext())
-            {
-                System.out.println(it.next());
+            for (ContactPerson contactDetail : contactDetails) {
+                System.out.println(contactDetail);
             }
         }
         else
