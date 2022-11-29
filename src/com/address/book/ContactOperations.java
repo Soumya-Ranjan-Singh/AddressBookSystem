@@ -3,13 +3,12 @@
 package com.address.book;
 
 import com.google.gson.Gson;
-import com.opencsv.bean.ColumnPositionMappingStrategy;
-import com.opencsv.bean.CsvToBean;
-import com.opencsv.bean.CsvToBeanBuilder;
+import com.opencsv.CSVReader;
+import com.opencsv.CSVReaderBuilder;
+import com.opencsv.exceptions.CsvException;
 
 import java.io.*;
 import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.*;
 
 public class ContactOperations implements Serializable {
@@ -100,16 +99,20 @@ public class ContactOperations implements Serializable {
 
     public void readContactData (AddressBookSystemMain.IOService ioService) {
         if (ioService.equals(AddressBookSystemMain.IOService.FILE_IO)) {
-            System.out.println("1.Want to read contact list by means of Buffer writer?");
-            System.out.println("2.Want to read contact list by means of Object output stream?");
+            System.out.println("1.Want to read contact list by means of Buffer reader?");
+            System.out.println("2.Want to read contact list by means of Object input stream?");
             int wrtChoice = scan.nextInt();
             if (wrtChoice == 2) {
                 try {
                     String name = "PhoneBookObject.txt";
                     FileInputStream fis = new FileInputStream(name);
                     ObjectInputStream ois = new ObjectInputStream(fis);
-                    Object obj = ois.readObject();
-                    contactDetails.add((ContactPerson) obj);
+                    ContactPerson obj1 = (ContactPerson) ois.readObject();
+                    ContactPerson obj2 = (ContactPerson) ois.readObject();
+                    ContactPerson obj3 = (ContactPerson) ois.readObject();
+                    contactDetails.add(obj1);
+                    contactDetails.add(obj2);
+                    contactDetails.add(obj3);
                 } catch (IOException | ClassNotFoundException e) {
                     throw new RuntimeException(e);
                 }
@@ -133,25 +136,24 @@ public class ContactOperations implements Serializable {
                 }
             }
         } else if (ioService.equals(AddressBookSystemMain.IOService.CSV_IO)) {
-            try (
-                    Reader reader = Files.newBufferedReader(Paths.get("PhoneBook.csv"))
-            ) {
-                ColumnPositionMappingStrategy<ContactPerson> strategy = new ColumnPositionMappingStrategy<>();
-                strategy.setType(ContactPerson.class);
-                String[] memberFieldsToBindTo = {"firstName", "lastName", "address", "city", "state", "zip", "phoneNumber", "email"};
-                strategy.setColumnMapping(memberFieldsToBindTo);
-                @SuppressWarnings({"unchecked", "rawtypes"}) CsvToBean<ContactPerson> csvToBean = new CsvToBeanBuilder(reader)
-                        .withMappingStrategy(strategy)
+            try {
+                FileReader filereader = new FileReader("PhoneBook.csv");
+                List<String[]> allData;
+                try (CSVReader csvReader = new CSVReaderBuilder(filereader)
                         .withSkipLines(1)
-                        .withIgnoreLeadingWhiteSpace(true)
-                        .build();
-                for (ContactPerson obj : csvToBean) {
-                    contactDetails.add(obj);
+                        .build()) {
+                    allData = csvReader.readAll();
+                } catch (IOException | CsvException e) {
+                    throw new RuntimeException(e);
                 }
-            } catch (IOException e) {
+                for (String[] row : allData) {
+                    contactDetails.add(new ContactPerson(row[0],row[1],row[2],row[3],row[4],row[5],row[6],row[7]));
+                }
+            } catch (FileNotFoundException e) {
                 throw new RuntimeException(e);
             }
-        } else if (ioService.equals(AddressBookSystemMain.IOService.JSON_IO)) {
+        }
+        else if (ioService.equals(AddressBookSystemMain.IOService.JSON_IO)) {
             try {
                 Gson gson = new Gson();
                 //Read the Contact.json file

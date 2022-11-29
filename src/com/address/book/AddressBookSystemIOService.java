@@ -173,7 +173,13 @@ public class AddressBookSystemIOService {
                             String fileName = entry.getKey() + "Object.txt";
                             FileOutputStream fos = new FileOutputStream(fileName);
                             ObjectOutputStream oos = new ObjectOutputStream(fos);
-                            oos.writeObject(entry.getValue());
+                            entry.getValue().getContact().forEach(contactPerson -> {
+                                try {
+                                    oos.writeObject(contactPerson);
+                                } catch (IOException e) {
+                                    throw new RuntimeException(e);
+                                }
+                            });
                             oos.flush();
                             oos.close();
                             fos.close();

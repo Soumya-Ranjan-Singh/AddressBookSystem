@@ -25,7 +25,7 @@ import static com.address.book.AddressBookSystemMain.IOService.*;
 
 public class AddressBookSystemMain {
 
-    public enum IOService {CONSOLE_IO, FILE_IO, CSV_IO, UTFDataFormatException, JSON_IO}
+    public enum IOService {CONSOLE_IO, FILE_IO, CSV_IO, JSON_IO}
 
     //Declaring one hashmap containing all the address book
     public static Map<String, ContactOperations> addressBookDictionary = new HashMap<>();
@@ -94,8 +94,8 @@ public class AddressBookSystemMain {
                     else if (choice == 3){
                         System.out.println("Which io stream you want to use");
                         System.out.println("1.File IO?");
-                        System.out.println("2.CSV IO?y");
-                        System.out.println("1.JSON IO?");
+                        System.out.println("2.CSV IO?");
+                        System.out.println("3.JSON IO?");
                         int wish = scan.nextInt();
                         if (wish == 1)
                             addressBook.readContactData(FILE_IO);
@@ -254,7 +254,7 @@ public class AddressBookSystemMain {
         //search persons by means of city or state in whole address books
         obj.searchPersons();
 
-        temp.writeAddressBookData(JSON_IO,addressBookDictionary);
+        temp.writeAddressBookData(FILE_IO,addressBookDictionary);
     }
 }
 
